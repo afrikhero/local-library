@@ -31,7 +31,8 @@ exports.author_detail = function(req, res, next) {
   //Successful, so render
   res.render('author_detail', { title: 'Author Detail', author: results.author, author_books: results.authors_books });
 });
-};
+}
+
 
 // Display Author create form on GET
 exports.author_create_get = function(req, res) {
@@ -79,13 +80,48 @@ exports.author_create_post = function(req, res) {
 };
 
 // Display Author delete form on GET
-exports.author_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author delete GET');
+exports.author_delete_get = function(req, res, next) {
+    async.parallel({
+      author: function(callback){
+        Author.findById(req.params.id).exec(callback);
+      },
+      authors_books: function(callback){
+        Book.find({'author': req.params.id }).exec(callback);
+      },
+    }, function(err, results){
+      if(err){return next(err);}
+      //Successful, so render
+      res.render('author_delete', {title: 'Delete Author', author: results.author, author_books: results.authors_books});
+    });
 };
 
 // Handle Author delete on POST
 exports.author_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author delete POST');
+    req.checkBody('authorid', 'Author id must exist').notEmpty();
+
+    async.parallel({
+      author: function(callback){
+        Author.findById(req.body.authorid).exec(callback);
+      },
+    }, function(err, results){
+      if(err){ return next(err); }
+      //successful
+      if(results.authors_books.length > 0){
+        //Author has books. Render in same way as for Get route.
+        res.render('author_delete', {title: 'Delete Author', author: results.author, author_books: results.authors_books });
+        return;
+      }
+      else{
+        //Author has no books. Delete object and redirect to the list of authors.
+        Author.findByIdAndRemove(req.body.authorid, function deleteAuthor(err){
+          if(err){ return next(err); }
+          //successful
+          res.redirect('/catalog/authors');
+        })
+}
+
+});
+
 };
 
 // Display Author update form on GET
