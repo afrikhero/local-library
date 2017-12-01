@@ -86,13 +86,49 @@ exports.genre_create_post = function(req, res, next) {
 };
 
 // Display Genre delete form on GET
-exports.genre_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre delete GET');
+exports.genre_delete_get = function(req, res, next) {
+    async.parallel({
+      genre: function(callback){
+        Genre.findById(req.params.id).exec(callback);
+      },
+      genre_books: function(callback){
+        Book.find({'genre': req.params.id }).exec(callback);
+      },
+    }, function(err, results) {
+      if(err) {return next(err); }
+      //Successful, so render
+      res.render('genre_delete', {title: 'Delete Genre', genre: results.genre, genre_books: results.genre_books});
+    });
 };
 
 // Handle Genre delete on POST
-exports.genre_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre delete POST');
+exports.genre_delete_post = function(req, res, next) {
+    req.checkBody('genreid', 'Genre id must exist').notEmpty();
+
+    async.parallel({
+      genre: function(callback){
+        Genre.findById(req.body.genreid).exec(callback);
+      },
+      genre_books: function(callback){
+        Book.find({'genre': req.body.genreid },'title summary').exec(callback);
+      },
+    }, function(err, results){
+      if(err){return next(err); }
+      //Successful
+      if(results.genre_books.length > 0){
+        //genre has books. Render in same way as for GET route.
+        res.render('genre_delete', {title: 'Delete Genre', genre: results.genre, genre_books: results.genre_books});
+        return;
+      }
+      else {
+        //Genre has no books. Delete object and direct to view page
+        Genre.findByIdAndRemove(req.body.genreid, function deleteGenre(err){
+          if(err){return next(err); }
+          //Successful, dirent to genre views
+          res.redirect('/catalog/genres');
+        });
+      }
+    });
 };
 
 // Display Genre update form on GET
