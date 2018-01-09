@@ -12,7 +12,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var catalog = require('./routes/catalog'); //imports routes for catalog area of site
 var compression = require('compression');
-var helmet = require('helemt'); //middleware for securing the http headers
+var helmet = require('helmet'); //middleware for securing the http headers
 
 var app = express();
 
@@ -20,11 +20,11 @@ var app = express();
 app.use(compression());
 
 //use helmet to secure HTTP hearders
-app.use(helemt());
+app.use(helmet());
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = "mongodb://afrikhero:555666888@ds113936.mlab.com:13936/local_library";
+var mongoDB = process.env.MONGODB_URI || "mongodb://afrikhero:555666888@ds113936.mlab.com:13936/local_library";
 mongoose.connect(mongoDB, {
   useMongoClient: true
 });
