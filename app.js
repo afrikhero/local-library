@@ -11,8 +11,16 @@ var expressValidator = require('express-validator');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var catalog = require('./routes/catalog'); //imports routes for catalog area of site
+var compression = require('compression');
+var helmet = require('helemt'); //middleware for securing the http headers
 
 var app = express();
+
+//Compress all routes
+app.use(compression());
+
+//use helmet to secure HTTP hearders
+app.use(helemt());
 
 //Set up mongoose connection
 var mongoose = require('mongoose');

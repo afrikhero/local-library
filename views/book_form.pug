@@ -12,7 +12,14 @@ block content
       select#author.form-control(type='select', placeholder='Select author' name='author' required='true' )
         for author in authors
           if book
-            option(value=author._id selected=(author._id.toString()==book.author ? 'selected' : false) ) #{author.name}
+            //- Handle GET form, where book.author is an object, and POST form, where it is a string.
+            option(
+             value=author._id 
+             selected=(
+               author._id.toString()==book.author._id
+               || author._id.toString()==book.author
+             ) ? 'selected' : false
+          ) #{author.name}
           else
             option(value=author._id) #{author.name}
     div.form-group
