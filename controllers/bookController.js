@@ -110,8 +110,6 @@ exports.book_create_post = function(req, res, next) {
     genre: (typeof req.body.genre==='undefined') ? [] : req.body.genre.split(",")
   });
 
-  console.log('BOOK: ' + book);
-
   var errors = req.validationErrors();
   if(errors){
     //Some problems so we need to re-render our books
