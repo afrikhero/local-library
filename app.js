@@ -1,20 +1,17 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var expressValidator = require('express-validator');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+const index = require('./routes/index');
+const users = require('./routes/users');
+const catalog = require('./routes/catalog'); //imports routes for catalog area of site
+const compression = require('compression');
+const helmet = require('helmet'); //middleware for securing the http headers
 
-
-
-var index = require('./routes/index');
-var users = require('./routes/users');
-var catalog = require('./routes/catalog'); //imports routes for catalog area of site
-var compression = require('compression');
-var helmet = require('helmet'); //middleware for securing the http headers
-
-var app = express();
+const app = express();
 
 //Compress all routes
 app.use(compression());
