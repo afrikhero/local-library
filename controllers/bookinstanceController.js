@@ -1,6 +1,6 @@
-var async = require('async');
-var Book = require('../models/book');
-var BookInstance = require('../models/bookinstance');
+const async = require('async');
+const Book = require('../models/book');
+const BookInstance = require('../models/bookinstance');
 
 // Display list of all BookInstances
 exports.bookinstance_list = function(req, res, next) {

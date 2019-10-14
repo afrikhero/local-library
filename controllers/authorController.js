@@ -1,6 +1,6 @@
-var async = require('async');
-var Book = require('../models/book');
-var Author = require('../models/author');
+const async = require('async');
+const Book = require('../models/book');
+const Author = require('../models/author');
 
 // Display list of all Authors
 exports.author_list = function(req, res, next) {

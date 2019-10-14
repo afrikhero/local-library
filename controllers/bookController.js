@@ -1,11 +1,11 @@
-var Book = require('../models/book');
-var Author = require('../models/author');
-var Genre = require('../models/genre');
-var BookInstance = require('../models/bookinstance');
+const Book = require('../models/book');
+const Author = require('../models/author');
+const Genre = require('../models/genre');
+const BookInstance = require('../models/bookinstance');
 
-var async = require('async');
-var { body,validationResult } = require('express-validator/check');
-var { sanitizeBody } = require('express-validator/filter');
+const async = require('async');
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 
 exports.index = function(req, res){
 
@@ -109,8 +109,6 @@ exports.book_create_post = function(req, res, next) {
     isbn: req.body.isbn,
     genre: (typeof req.body.genre==='undefined') ? [] : req.body.genre.split(",")
   });
-
-  console.log('BOOK: ' + book);
 
   var errors = req.validationErrors();
   if(errors){
